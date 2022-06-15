@@ -1,5 +1,7 @@
 package pl.charmas.android.reactivelocation2.sample;
 
+import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
+
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Address;
@@ -35,8 +37,6 @@ import pl.charmas.android.reactivelocation2.sample.utils.DetectedActivityToStrin
 import pl.charmas.android.reactivelocation2.sample.utils.DisplayTextOnViewAction;
 import pl.charmas.android.reactivelocation2.sample.utils.LocationToStringFunc;
 import pl.charmas.android.reactivelocation2.sample.utils.ToMostProbableActivity;
-
-import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
 
 public class MainActivity extends BaseActivity {
     private final static int REQUEST_CHECK_SETTINGS = 0;

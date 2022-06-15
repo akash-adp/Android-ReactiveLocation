@@ -1,10 +1,13 @@
 package pl.charmas.android.reactivelocation2.sample;
 
+import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -12,8 +15,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
-
-import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
 
 public class PlacesResultActivity extends BaseActivity {
 

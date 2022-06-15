@@ -1,5 +1,9 @@
 package pl.charmas.android.reactivelocation2.sample;
 
+import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
@@ -30,8 +36,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
 import pl.charmas.android.reactivelocation2.sample.utils.RxTextView;
-
-import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
 
 public class PlacesActivity extends BaseActivity {
 
@@ -96,6 +100,9 @@ public class PlacesActivity extends BaseActivity {
                         return !TextUtils.isEmpty(s);
                     }
                 });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         Observable<Location> lastKnownLocationObservable = reactiveLocationProvider.getLastKnownLocation();
         Observable<AutocompletePredictionBuffer> suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable,

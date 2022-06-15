@@ -1,5 +1,7 @@
 package pl.charmas.android.reactivelocation2.sample;
 
+import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
+
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +22,6 @@ import io.reactivex.functions.Function;
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
 import pl.charmas.android.reactivelocation2.sample.utils.DisplayTextOnViewAction;
 import pl.charmas.android.reactivelocation2.sample.utils.LocationToStringFunc;
-
-import static pl.charmas.android.reactivelocation2.sample.utils.UnsubscribeIfPresent.dispose;
 
 public class GeofenceActivity extends BaseActivity {
     private static final String TAG = "GeofenceActivity";
