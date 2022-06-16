@@ -1,9 +1,11 @@
 package pl.charmas.android.reactivelocation.sample;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -100,8 +102,13 @@ public class GeofenceActivity extends BaseActivity {
         Toast.makeText(GeofenceActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private PendingIntent createNotificationBroadcastPendingIntent() {
-        return PendingIntent.getBroadcast(this, 0, new Intent(this, GeofenceBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return PendingIntent.getBroadcast(this, 0, new Intent(this, GeofenceBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            return PendingIntent.getBroadcast(this, 0, new Intent(this, GeofenceBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        }
     }
 
     private void addGeofence() {
