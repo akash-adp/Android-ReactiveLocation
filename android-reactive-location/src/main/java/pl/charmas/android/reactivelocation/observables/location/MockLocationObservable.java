@@ -1,6 +1,10 @@
 package pl.charmas.android.reactivelocation.observables.location;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -33,6 +37,10 @@ public class MockLocationObservable extends BaseLocationObservable<Status> {
     protected void onGoogleApiClientReady(final GoogleApiClient apiClient, final Observer<? super Status> observer) {
         // this throws SecurityException if permissions are bad or mock locations are not enabled,
         // which is passed to observer's onError by BaseObservable
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            observer.onError(new Exception("Permission: ACCESS_FINE_LOCATION"));
+            return;
+        }
         LocationServices.FusedLocationApi.setMockMode(apiClient, true)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
@@ -50,6 +58,10 @@ public class MockLocationObservable extends BaseLocationObservable<Status> {
         mockLocationSubscription = locationObservable.subscribe(new Action1<Location>() {
             @Override
             public void call(Location location) {
+                if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    observer.onError(new Exception("Permission: ACCESS_FINE_LOCATION"));
+                    return;
+                }
                 LocationServices.FusedLocationApi.setMockLocation(apiClient, location)
                         .setResultCallback(new ResultCallback<Status>() {
                             @Override

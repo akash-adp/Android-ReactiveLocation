@@ -1,6 +1,10 @@
 package pl.charmas.android.reactivelocation.observables.location;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,6 +40,10 @@ public class LocationUpdatesObservable extends BaseLocationObservable<Location> 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final Observer<? super Location> observer) {
         listener = new LocationUpdatesLocationListener(observer);
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            observer.onError(new Exception("Permission: ACCESS_FINE_LOCATION"));
+            return;
+        }
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, listener);
     }
 

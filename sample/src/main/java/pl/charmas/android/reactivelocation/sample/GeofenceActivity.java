@@ -1,7 +1,9 @@
 package pl.charmas.android.reactivelocation.sample;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 import static pl.charmas.android.reactivelocation.sample.utils.UnsubscribeIfPresent.unsubscribe;
+
+import androidx.core.app.ActivityCompat;
 
 public class GeofenceActivity extends BaseActivity {
     private static final String TAG = "GeofenceActivity";
@@ -62,6 +66,9 @@ public class GeofenceActivity extends BaseActivity {
 
     @Override
     protected void onLocationPermissionGranted() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         lastKnownLocationSubscription = reactiveLocationProvider
                 .getLastKnownLocation()
                 .map(new LocationToStringFunc())
@@ -107,6 +114,9 @@ public class GeofenceActivity extends BaseActivity {
                 .flatMap(new Func1<Status, Observable<Status>>() {
                     @Override
                     public Observable<Status> call(Status pendingIntentRemoveGeofenceResult) {
+                        if (ActivityCompat.checkSelfPermission(GeofenceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return null;
+                        }
                         return reactiveLocationProvider.addGeofences(pendingIntent, geofencingRequest);
                     }
                 })

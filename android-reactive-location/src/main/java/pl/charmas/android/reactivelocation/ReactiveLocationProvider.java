@@ -1,12 +1,16 @@
 package pl.charmas.android.reactivelocation;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -337,6 +341,9 @@ public class ReactiveLocationProvider {
                 .flatMap(new Func1<GoogleApiClient, Observable<PlaceLikelihoodBuffer>>() {
                     @Override
                     public Observable<PlaceLikelihoodBuffer> call(GoogleApiClient api) {
+                        if (ActivityCompat.checkSelfPermission(ctx.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return null;
+                        }
                         return fromPendingResult(Places.PlaceDetectionApi.getCurrentPlace(api, placeFilter));
                     }
                 });

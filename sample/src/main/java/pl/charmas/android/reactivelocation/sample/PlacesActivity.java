@@ -1,5 +1,7 @@
 package pl.charmas.android.reactivelocation.sample;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,6 +33,8 @@ import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 
 import static pl.charmas.android.reactivelocation.sample.utils.UnsubscribeIfPresent.unsubscribe;
+
+import androidx.core.app.ActivityCompat;
 
 public class PlacesActivity extends BaseActivity {
 
@@ -97,6 +101,9 @@ public class PlacesActivity extends BaseActivity {
                         return !TextUtils.isEmpty(s);
                     }
                 });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         Observable<Location> lastKnownLocationObservable = reactiveLocationProvider.getLastKnownLocation();
         Observable<AutocompletePredictionBuffer> suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable, new Func2<String, Location, QueryWithCurrentLocation>() {

@@ -1,6 +1,10 @@
 package pl.charmas.android.reactivelocation.observables.geofence;
 
+import android.Manifest;
 import android.app.PendingIntent;
+import android.content.pm.PackageManager;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -30,6 +34,10 @@ public class AddGeofenceObservable extends BaseLocationObservable<Status> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final Observer<? super Status> observer) {
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            observer.onError(new Exception("Permission: ACCESS_FINE_LOCATION"));
+            return;
+        }
         LocationServices.GeofencingApi.addGeofences(apiClient, request, geofenceTransitionPendingIntent)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override

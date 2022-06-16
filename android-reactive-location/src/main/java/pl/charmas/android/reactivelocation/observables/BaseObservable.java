@@ -2,7 +2,7 @@ package pl.charmas.android.reactivelocation.observables;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.Api;
@@ -19,7 +19,7 @@ import rx.subscriptions.Subscriptions;
 
 
 public abstract class BaseObservable<T> implements Observable.OnSubscribe<T> {
-    private final android.content.Context ctx;
+    protected final android.content.Context ctx;
     private final Handler handler;
     private final List<Api<? extends Api.ApiOptions.NotRequiredOptions>> services;
 
